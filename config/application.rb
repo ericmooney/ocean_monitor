@@ -19,5 +19,23 @@ module OceanMonitor
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+
+    config.action_view.field_error_proc = Proc.new { |html_tag, instance|
+        if instance.error_message.kind_of?(Array)
+            if html_tag[1..5] == 'label'
+                %(<div class="form-field error">#{html_tag}</div>).html_safe
+            else
+                %(<div class="form-field error">#{html_tag}<small class="error">&nbsp;
+                  #{instance.error_message.join(',')}</small></div>).html_safe
+            end
+        else
+            if  html_tag[1..5] == 'label'
+                %(<div class="form-field error">#{html_tag}</div>).html_safe
+            else
+                %(<div class="form-field error">#{html_tag}<small class="error">&nbsp;
+                  #{instance.error_message}</small></div>).html_safe
+            end
+        end
+    }
   end
 end
